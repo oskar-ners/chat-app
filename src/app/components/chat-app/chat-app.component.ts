@@ -33,6 +33,7 @@ export class ChatAppComponent implements OnInit {
           (user) => user.uid !== this.user?.uid
         );
         this.photoURL = this.user?.photoURL || null;
+        this.chatAppService.updateUserChats();
       }
     });
   }

@@ -1,6 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+} from '@angular/fire/firestore';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -8,6 +14,9 @@ import {
   UserCredential,
 } from 'firebase/auth';
 import { BehaviorSubject } from 'rxjs';
+import { AppUser } from '../interfaces/user.interface';
+import { Chat } from '../interfaces/chat.interface';
+import { Message } from '../interfaces/message.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -36,9 +45,25 @@ export class AuthService {
         password
       );
 
+      const allUsersDocs = await getDocs(collection(this.firestore, 'users'));
+      const allUsersData = allUsersDocs.docs
+        .map((doc) => doc.data() as AppUser)
+        .filter((user) => user.uid !== this.auth.currentUser?.uid);
+
+      const chats: Chat[] = allUsersData.map((user) => ({
+        id: `${user.username}_${user.email}`,
+        messages: [] as Message[],
+      }));
+
       const uid = userData.user.uid;
       const userDocRef = doc(this.firestore, `users/${uid}`);
-      await setDoc(userDocRef, { uid, username, email, password, chats: [] });
+      await setDoc(userDocRef, {
+        uid,
+        username,
+        email,
+        password,
+        chats: chats,
+      });
 
       localStorage.setItem('isLoggedIn', JSON.stringify(true));
       this.isLoggedIn.next(true);

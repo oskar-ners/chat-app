@@ -1,6 +1,6 @@
+import { Timestamp } from '@angular/fire/firestore';
+
 export interface Message {
-  id: string;
-  content: string;
-  sender: string;
-  timestamp: number;
+  text: string;
+  date: Timestamp;
 }
