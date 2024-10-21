@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { Firestore, doc, setDoc } from '@angular/fire/firestore';
+import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  updateProfile,
+  UserCredential,
 } from 'firebase/auth';
 import { BehaviorSubject } from 'rxjs';
 
@@ -19,7 +19,7 @@ export class AuthService {
   isLoggedIn = new BehaviorSubject<boolean>(this.checkIfUserLoggedIn());
   isLoggedIn$ = this.isLoggedIn.asObservable();
 
-  checkIfUserLoggedIn() {
+  checkIfUserLoggedIn(): boolean {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     return isLoggedIn ? JSON.parse(isLoggedIn) : false;
   }
@@ -28,7 +28,7 @@ export class AuthService {
     username: string,
     email: string,
     password: string
-  ): Promise<void> {
+  ): Promise<UserCredential> {
     try {
       const userData = await createUserWithEmailAndPassword(
         this.auth,
@@ -36,22 +36,24 @@ export class AuthService {
         password
       );
 
-      const uid = this.auth.currentUser?.uid;
+      const uid = userData.user.uid;
       const userDocRef = doc(this.firestore, `users/${uid}`);
-      setDoc(userDocRef, { uid, username, email, password });
-
-      updateProfile(userData.user, {
-        displayName: username,
-      });
+      await setDoc(userDocRef, { uid, username, email, password, chats: [] });
 
       localStorage.setItem('isLoggedIn', JSON.stringify(true));
       this.isLoggedIn.next(true);
 
       console.log('New account created! ' + userData.user.email);
+      return userData;
     } catch (error) {
       console.warn('Registration failed! Something went wrong!');
       throw error;
     }
+  }
+
+  async updateUserProfilePicture(uid: string, photoURL: string): Promise<void> {
+    const userDocRef = doc(this.firestore, `users/${uid}`);
+    await setDoc(userDocRef, { photoURL }, { merge: true });
   }
 
   async login(email: string, password: string): Promise<void> {
@@ -83,5 +85,11 @@ export class AuthService {
     } catch {
       console.warn('Something went wrong when you tried to sign out!');
     }
+  }
+
+  async getUserData(uid: string | undefined): Promise<any> {
+    const userDocRef = doc(this.firestore, `users/${uid}`);
+    const userDoc = await getDoc(userDocRef);
+    return userDoc.exists() ? userDoc.data() : null;
   }
 }
