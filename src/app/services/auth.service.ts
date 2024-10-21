@@ -86,10 +86,4 @@ export class AuthService {
       console.warn('Something went wrong when you tried to sign out!');
     }
   }
-
-  async getUserData(uid: string | undefined): Promise<any> {
-    const userDocRef = doc(this.firestore, `users/${uid}`);
-    const userDoc = await getDoc(userDocRef);
-    return userDoc.exists() ? userDoc.data() : null;
-  }
 }

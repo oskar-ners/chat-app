@@ -1,2 +1,31 @@
 <app-logout-button></app-logout-button>
-chat app works!
+<div class="chat-app-container">
+    <div class="chat-sidebar">
+        <div class="chat-list">
+            @for(user of allUsers; track user.uid) {
+            <div class="chat-user">
+                <img [src]="user.photoURL"
+                     alt="User 1">
+                <span>{{user.username}}</span>
+            </div>
+            }
+        </div>
+    </div>
+    <div class="chat">
+        <div class="chat-header">
+            <h2>Chat with User 1</h2>
+        </div>
+        <div class="chat-body">
+            <div class="chat-messages">
+                <div class="message received">Hello!</div>
+                <div class="message sent">Hi there!</div>
+            </div>
+            <div class="chat-input">
+                <input type="text"
+                       class="input-field"
+                       placeholder="Type a message...">
+                <button class="send-button">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
