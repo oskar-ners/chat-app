@@ -1,0 +1,137 @@
+.register-container {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  width: 500px;
+  transition: all 0.3s ease-in-out;
+
+  @media (max-width: 768px) {
+    padding: 2rem;
+  }
+
+  &:hover {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.register-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 1.8rem;
+  letter-spacing: 1px;
+}
+
+form.form {
+  width: 100%;
+}
+
+.form-group {
+  width: 93%;
+  position: relative;
+  margin-bottom: 1.5rem;
+
+  .input-field {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+    &:focus {
+      border-color: #ff758c;
+      background: #fff;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      outline: none;
+    }
+  }
+
+  .error {
+    color: #ff4757;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+    position: absolute;
+    bottom: -2rem;
+    left: 0;
+  }
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.9rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(45deg, #ff758c, #ff7eb3);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: linear-gradient(45deg, #ff7eb3, #ff758c);
+    box-shadow: 0 8px 20px rgba(255, 120, 140, 0.3);
+  }
+}
+
+.login-link {
+  display: block;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: #ff758c;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #ff7eb3;
+    text-decoration: underline;
+  }
+}
+
+.error-message {
+  color: #ff4757;
+  text-align: center;
+  font-size: 0.95rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+
+  .form-title {
+    font-size: 1.8rem;
+  }
+
+  .input-field {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .submit-btn {
+    padding: 0.8rem;
+    font-size: 1.1rem;
+  }
+
+  .login-link {
+    font-size: 0.85rem;
+  }
+}

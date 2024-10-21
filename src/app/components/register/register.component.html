@@ -1,0 +1,68 @@
+<div class="register-container">
+    <div class="register-form">
+        <h1 class="form-title">Register</h1>
+        <form #form="ngForm"
+              (ngSubmit)="onSubmit(form)"
+              class="form">
+            <div class="form-group">
+                <input type="text"
+                       name="username"
+                       id="username"
+                       class="input-field"
+                       [(ngModel)]="username"
+                       placeholder="Username"
+                       required
+                       autocomplete="username">
+                @if(form.submitted && !username ) {
+                <p class="error">
+                    Username is a required field.
+                </p>
+                }
+            </div>
+
+            <div class="form-group">
+                <input type="text"
+                       name="email"
+                       id="email"
+                       class="input-field"
+                       [(ngModel)]="email"
+                       placeholder="Email"
+                       required
+                       autocomplete="email">
+                @if(form.submitted && !email ) {
+                <p class="error">
+                    Email is a required field.
+                </p>
+                }
+            </div>
+
+            <div class="form-group">
+                <input type="password"
+                       name="password"
+                       id="password"
+                       class="input-field"
+                       [(ngModel)]="password"
+                       placeholder="Password"
+                       required
+                       autocomplete="new-password">
+                @if(form.submitted && !password) {
+                <p class="error">
+                    Password is a required field.
+                </p>
+                }
+            </div>
+
+            <button type="submit"
+                    class="submit-btn">Register</button>
+
+
+            @if(errorMessage) {
+            <p class="error">{{errorMessage}}</p>
+            }
+
+            <a routerLink="/login"
+               class="login-link">Already have an account? Log in!</a>
+
+        </form>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="login-container">
+    <div class="login-form">
+        <h1 class="form-title">Login to Your Chat App</h1>
+        <form #form="ngForm"
+              (ngSubmit)="onSubmit(form)"
+              class="form">
+            <div class="form-group">
+                <input type="text"
+                       name="email"
+                       id="email"
+                       class="input-field"
+                       [(ngModel)]="email"
+                       placeholder="Email"
+                       required
+                       autocomplete="email">
+                @if(form.submitted && !email) {
+                <p class="error">
+                    Email is required.
+                </p>
+                }
+            </div>
+
+            <div class="form-group">
+                <input type="password"
+                       name="password"
+                       id="password"
+                       class="input-field"
+                       [(ngModel)]="password"
+                       placeholder="Password"
+                       required
+                       autocomplete="current-password">
+                @if(form.submitted && !password) {
+                <p class="error">
+                    Password is required.
+                </p>
+                }
+            </div>
+
+            <button type="submit"
+                    class="submit-btn">Login</button>
+
+            @if(errorMessage) {
+            <p class="error">{{errorMessage}}</p>
+            }
+
+            <a routerLink="/register"
+               class="register-link">Don't have an account? Register!</a>
+        </form>
+    </div>
+</div>
