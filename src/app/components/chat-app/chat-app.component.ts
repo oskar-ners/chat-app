@@ -4,11 +4,12 @@ import { AuthService } from '../../services/auth.service';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { ChatAppService } from '../../services/chat-app.service';
 import { AppUser } from '../../interfaces/user.interface';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'app-chat-app',
   standalone: true,
-  imports: [LogoutButtonComponent],
+  imports: [LogoutButtonComponent, NgTemplateOutlet],
   templateUrl: './chat-app.component.html',
   styleUrl: './chat-app.component.scss',
 })
@@ -19,6 +20,7 @@ export class ChatAppComponent implements OnInit {
   auth = inject(Auth);
 
   user!: AppUser | null;
+  selectedUser!: AppUser;
   allUsers: AppUser[] = [];
   photoURL: string | null = null;
 
@@ -33,5 +35,14 @@ export class ChatAppComponent implements OnInit {
         this.photoURL = this.user?.photoURL || null;
       }
     });
+  }
+
+  openChat(user: AppUser): void {
+    this.selectedUser = user;
+    localStorage.setItem('selectedUser', this.selectedUser.username);
+  }
+
+  get usernameOfCurrentlyOpenChat(): string {
+    return localStorage.getItem('selectedUser') || '';
   }
 }
