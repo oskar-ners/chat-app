@@ -37,18 +37,25 @@ export class ChatAppComponent implements OnInit {
           (user) => user.uid !== this.user?.uid
         );
         this.photoURL = this.user?.photoURL || null;
-        this.chatAppService.updateUserChats();
+
+        const storedUser = localStorage.getItem('selectedUser');
+        if (storedUser) {
+          this.selectedUser = JSON.parse(storedUser);
+        }
       }
     });
   }
 
   openChat(user: AppUser): void {
     this.selectedUser = user;
-    localStorage.setItem('selectedUser', this.selectedUser.username);
+    localStorage.setItem('selectedUser', JSON.stringify(this.selectedUser));
   }
 
   get usernameOfCurrentlyOpenChat(): string {
-    return localStorage.getItem('selectedUser') || '';
+    const selectedUser = JSON.parse(
+      localStorage.getItem('selectedUser') || '{}'
+    );
+    return selectedUser.username || '';
   }
 
   async sendMessage() {
