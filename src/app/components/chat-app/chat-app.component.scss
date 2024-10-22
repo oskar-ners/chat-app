@@ -33,7 +33,11 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 1200px;
+  width: 850px;
   height: 600px;
+  @media (max-width: 768px) {
+    width: 330px;
+  }
 }
 
 .chat-sidebar {
@@ -199,5 +203,9 @@
 
   .chat {
     width: 100%;
+  }
+
+  .navbar {
+    margin-top: 180px;
   }
 }
