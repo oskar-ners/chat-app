@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   button {
     background: none;
     border: none;
-    color: white;
+    color: black;
     font-size: 18px;
     padding: 10px 15px;
     border-radius: 5px;

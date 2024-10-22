@@ -1,8 +1,8 @@
 <nav class="navbar">
-    <h2>Welcome, {{user?.username}}!</h2>
+    <h2 class="navbar_h2">Welcome, {{user?.username}}!</h2>
     <img [src]="user?.photoURL"
          [alt]="user?.username + ' image'"
-         class="user-avatar">
+         class="navbar_img">
     <app-logout-button></app-logout-button>
 </nav>
 
@@ -31,20 +31,25 @@
              let-user="user">
     <div style="display: flex;"
          class="chat-header">
-        <h2>Chat with {{usernameOfCurrentlyOpenChat}}</h2>
+        <h2 class="chat-header-h2">Chat with {{usernameOfCurrentlyOpenChat}}</h2>
         @if(selectedUser?.photoURL) {
-        <img style="width: 60px; height:70px; margin-left: 10px;"
-             [src]="selectedUser?.photoURL">
+        <img [src]="selectedUser?.photoURL"
+             class="chat-header-img">
         }
     </div>
     <div class="chat-body">
         @if(user && user.chats) {
         <div class="chat-messages">
             @for(message of selectedUserMessages; track message.id) {
-            <p>{{message.text}}</p>
-            <p> {{message.date.toDate() | date: 'short'}}</p>
-            <p>{{message.senderUsername}}</p>
-            <img [src]="message.senderPhoto">
+            <div style="display: flex; justify-content: space-between;">
+                <p class="message-text">{{message.text}}</p>
+                <div>
+                    <p class="message-date"> {{message.date.toDate() | date: 'short'}}</p>
+                    <p class="message-username">{{message.senderUsername}}</p>
+                    <img class="message-img"
+                         [src]="message.senderPhoto">
+                </div>
+            </div>
             }
         </div>
         }

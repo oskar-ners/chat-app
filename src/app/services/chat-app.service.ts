@@ -41,6 +41,41 @@ export class ChatAppService {
     }
   }
 
+  async updateUserChats(): Promise<void> {
+    const allUsersDocs = await getDocs(collection(this.firestore, 'users'));
+    const allUsersData = allUsersDocs.docs.map((doc) => doc.data() as AppUser);
+
+    for (const user of allUsersData) {
+      const userDocRef = doc(this.firestore, `users/${user.uid}`);
+      const userDocSnap = await getDoc(userDocRef);
+
+      let existingChats: Chat[] = userDocSnap.exists()
+        ? userDocSnap.data()?.['chats'] || []
+        : [];
+
+      const updatedChats = [...existingChats];
+
+      for (const otherUser of allUsersData) {
+        if (user.uid !== otherUser.uid) {
+          const chatId = `chat_with_${otherUser.username}-${otherUser.uid}`;
+
+          const chatExists = existingChats.some((chat) => chat.id === chatId);
+
+          if (!chatExists) {
+            updatedChats.push({
+              id: chatId,
+              messages: [] as Message[],
+            });
+          }
+        }
+      }
+
+      if (updatedChats.length !== existingChats.length) {
+        await updateDoc(userDocRef, { chats: updatedChats });
+      }
+    }
+  }
+
   async updateChatMessages(
     chatId: string,
     newMessage: Message,
