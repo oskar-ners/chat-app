@@ -5,9 +5,9 @@ import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { ChatAppService } from '../../services/chat-app.service';
 import { AppUser } from '../../interfaces/user.interface';
 import { NgTemplateOutlet } from '@angular/common';
-import { Message } from '../../interfaces/message.interface';
 import { Timestamp } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
+import { Message } from '../../interfaces/message.interface';
 
 @Component({
   selector: 'app-chat-app',
@@ -23,7 +23,7 @@ export class ChatAppComponent implements OnInit {
   auth = inject(Auth);
 
   user!: AppUser | null;
-  selectedUser!: AppUser;
+  selectedUser!: AppUser | undefined;
   allUsers: AppUser[] = [];
   photoURL: string | null = null;
   newMessage: string = '';
@@ -56,6 +56,11 @@ export class ChatAppComponent implements OnInit {
       localStorage.getItem('selectedUser') || '{}'
     );
     return selectedUser.username || '';
+  }
+
+  get selectedUserMessages(): Message[] {
+    const chatId = `chat_with_${this.selectedUser?.username}-${this.selectedUser?.uid}`;
+    return this.user?.chats.find((chat) => chat.id === chatId)?.messages || [];
   }
 
   async sendMessage() {

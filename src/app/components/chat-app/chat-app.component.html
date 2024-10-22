@@ -32,15 +32,19 @@
     <div style="display: flex;"
          class="chat-header">
         <h2>Chat with {{usernameOfCurrentlyOpenChat}}</h2>
+        @if(selectedUser?.photoURL) {
         <img style="width: 60px; height:70px; margin-left: 10px;"
-             [src]="selectedUser.photoURL">
+             [src]="selectedUser?.photoURL">
+        }
     </div>
     <div class="chat-body">
+        @if(user && user.chats) {
         <div class="chat-messages">
-            @for(message of user?.chats; track message.id) {
+            @for(message of selectedUserMessages; track message.id) {
             <p>{{message.text}}</p>
             }
         </div>
+        }
         <div class="chat-input">
             <input type="text"
                    class="input-field"
