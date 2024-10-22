@@ -5,11 +5,14 @@ import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { ChatAppService } from '../../services/chat-app.service';
 import { AppUser } from '../../interfaces/user.interface';
 import { NgTemplateOutlet } from '@angular/common';
+import { Message } from '../../interfaces/message.interface';
+import { Timestamp } from '@angular/fire/firestore';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-chat-app',
   standalone: true,
-  imports: [LogoutButtonComponent, NgTemplateOutlet],
+  imports: [LogoutButtonComponent, NgTemplateOutlet, FormsModule],
   templateUrl: './chat-app.component.html',
   styleUrl: './chat-app.component.scss',
 })
@@ -23,6 +26,7 @@ export class ChatAppComponent implements OnInit {
   selectedUser!: AppUser;
   allUsers: AppUser[] = [];
   photoURL: string | null = null;
+  newMessage: string = '';
 
   async ngOnInit() {
     onAuthStateChanged(this.auth, async (user) => {
@@ -45,5 +49,21 @@ export class ChatAppComponent implements OnInit {
 
   get usernameOfCurrentlyOpenChat(): string {
     return localStorage.getItem('selectedUser') || '';
+  }
+
+  async sendMessage() {
+    if (this.newMessage.trim() && this.selectedUser) {
+      const message: Message = {
+        text: this.newMessage,
+        senderUid: this.user?.uid || '',
+        date: Timestamp.now(),
+        id: Math.random(),
+      };
+
+      const chatId = `chat_with_${this.selectedUser.username}-${this.selectedUser.uid}`;
+
+      await this.chatAppService.updateChatMessages(chatId, message);
+      this.newMessage = '';
+    }
   }
 }

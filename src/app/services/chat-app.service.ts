@@ -65,4 +65,39 @@ export class ChatAppService {
       await updateDoc(userDocRef, { chats: chats[user.uid] });
     }
   }
+
+  async updateChatMessages(chatId: string, newMessage: Message): Promise<void> {
+    const currentUserUid = this.auth.currentUser?.uid;
+    if (!currentUserUid) return;
+
+    const userDocRef = doc(this.firestore, `users/${currentUserUid}`);
+
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+      const userData = userDocSnap.data();
+
+      const chatIndex = userData['chats'].findIndex(
+        (chat: Chat) => chat.id === chatId
+      );
+
+      if (chatIndex > -1) {
+        const updatedChats = [...userData['chats']];
+        const updatedMessages = [
+          ...updatedChats[chatIndex].messages,
+          newMessage,
+        ];
+
+        updatedChats[chatIndex].messages = updatedMessages;
+
+        await updateDoc(userDocRef, { chats: updatedChats });
+
+        console.log(`Wiadomość dodana do czatu o ID: ${chatId}`);
+      } else {
+        console.error('Nie znaleziono czatu o podanym ID');
+      }
+    } else {
+      console.error('Dokument użytkownika nie istnieje');
+    }
+  }
 }

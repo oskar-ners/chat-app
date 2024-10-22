@@ -23,25 +23,29 @@
     </div>
 
     <div class="chat">
-        <ng-container *ngTemplateOutlet="chatWithUser; context: {username: selectedUser?.username}"></ng-container>
+        <ng-container *ngTemplateOutlet="chatWithUser; context: {user: selectedUser}"></ng-container>
     </div>
 </div>
 
 <ng-template #chatWithUser
-             let-username="username">
+             let-user="user">
     <div class="chat-header">
         <h2>Chat with {{usernameOfCurrentlyOpenChat}}</h2>
     </div>
     <div class="chat-body">
         <div class="chat-messages">
-            <div class="message received">Hello!</div>
-            <div class="message sent">Hi there!</div>
+            @for(message of user?.chats; track message.id) {
+            <p>{{message.text}}</p>
+            }
         </div>
         <div class="chat-input">
             <input type="text"
                    class="input-field"
-                   placeholder="Type a message...">
-            <button class="send-button">Send</button>
+                   placeholder="Type a message..."
+                   [(ngModel)]="newMessage"
+                   (keyup.enter)="sendMessage()">
+            <button class="send-button"
+                    (click)="sendMessage()">Send</button>
         </div>
     </div>
 </ng-template>
