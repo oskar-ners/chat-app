@@ -41,21 +41,28 @@ export class ChatAppService {
     }
   }
 
-  async updateChatMessages(chatId: string, newMessage: Message): Promise<void> {
+  async updateChatMessages(
+    chatId: string,
+    newMessage: Message,
+    selectedUser: AppUser
+  ): Promise<void> {
     const currentUserUid = this.auth.currentUser?.uid;
     if (!currentUserUid) return;
 
     const userDocRef = doc(this.firestore, `users/${currentUserUid}`);
+    const recipientUid = selectedUser?.uid;
+    const recipientDocRef = doc(this.firestore, `users/${recipientUid}`);
 
     const userDocSnap = await getDoc(userDocRef);
+    const recipientDocSnap = await getDoc(recipientDocRef);
 
-    if (userDocSnap.exists()) {
+    if (userDocSnap.exists() && recipientDocSnap.exists()) {
       const userData = userDocSnap.data();
+      const recipientData = recipientDocSnap.data();
 
       const chatIndex = userData['chats'].findIndex(
         (chat: Chat) => chat.id === chatId
       );
-
       if (chatIndex > -1) {
         const updatedChats = [...userData['chats']];
         const updatedMessages = [
@@ -64,15 +71,30 @@ export class ChatAppService {
         ];
 
         updatedChats[chatIndex].messages = updatedMessages;
-
         await updateDoc(userDocRef, { chats: updatedChats });
+      }
 
-        console.log(`Wiadomość dodana do czatu o ID: ${chatId}`);
+      const recipientChatId = `chat_with_${userData['username']}-${currentUserUid}`;
+      const recipientChatIndex = recipientData['chats'].findIndex(
+        (chat: Chat) => chat.id === recipientChatId
+      );
+      if (recipientChatIndex > -1) {
+        const recipientUpdatedChats = [...recipientData['chats']];
+        const recipientUpdatedMessages = [
+          ...recipientUpdatedChats[recipientChatIndex].messages,
+          newMessage,
+        ];
+
+        recipientUpdatedChats[recipientChatIndex].messages =
+          recipientUpdatedMessages;
+        await updateDoc(recipientDocRef, { chats: recipientUpdatedChats });
+
+        console.log();
       } else {
-        console.error('Nie znaleziono czatu o podanym ID');
+        console.error('Nie znaleziono czatu odbiorcy o podanym ID');
       }
     } else {
-      console.error('Dokument użytkownika nie istnieje');
+      console.error('Dokument użytkownika lub odbiorcy nie istnieje');
     }
   }
 }

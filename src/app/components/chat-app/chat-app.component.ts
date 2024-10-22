@@ -4,7 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { ChatAppService } from '../../services/chat-app.service';
 import { AppUser } from '../../interfaces/user.interface';
-import { NgTemplateOutlet } from '@angular/common';
+import { DatePipe, NgTemplateOutlet } from '@angular/common';
 import { Timestamp } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { Message } from '../../interfaces/message.interface';
@@ -12,7 +12,7 @@ import { Message } from '../../interfaces/message.interface';
 @Component({
   selector: 'app-chat-app',
   standalone: true,
-  imports: [LogoutButtonComponent, NgTemplateOutlet, FormsModule],
+  imports: [LogoutButtonComponent, NgTemplateOutlet, FormsModule, DatePipe],
   templateUrl: './chat-app.component.html',
   styleUrl: './chat-app.component.scss',
 })
@@ -67,14 +67,19 @@ export class ChatAppComponent implements OnInit {
     if (this.newMessage.trim() && this.selectedUser) {
       const message: Message = {
         text: this.newMessage,
-        senderUid: this.user?.uid || '',
+        senderUsername: this.user?.username || '',
+        senderPhoto: this.user?.photoURL || '',
         date: Timestamp.now(),
         id: Math.random(),
       };
 
       const chatId = `chat_with_${this.selectedUser.username}-${this.selectedUser.uid}`;
 
-      await this.chatAppService.updateChatMessages(chatId, message);
+      await this.chatAppService.updateChatMessages(
+        chatId,
+        message,
+        this.selectedUser
+      );
       this.user = await this.chatAppService.getUserData(this.user?.uid);
       this.newMessage = '';
     }

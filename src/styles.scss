@@ -1,12 +1,18 @@
-body {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-family: "Roboto", sans-serif;
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
+}
+
+body {
+  background-color: #1f1f1f;
+  color: #ffffff;
+  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin: 0;
-  padding: 0;
-  background-size: cover;
-  box-sizing: border-box;
+  padding: 20px;
+  background: linear-gradient(145deg, #2d2d2d, #1b1b1b);
 }
