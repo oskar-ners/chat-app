@@ -14,12 +14,11 @@ import { Message } from '../../interfaces/message.interface';
   standalone: true,
   imports: [LogoutButtonComponent, NgTemplateOutlet, FormsModule, DatePipe],
   templateUrl: './chat-app.component.html',
-  styleUrl: './chat-app.component.scss',
+  styleUrls: ['./chat-app.component.scss'],
 })
 export class ChatAppComponent implements OnInit {
   authService = inject(AuthService);
   chatAppService = inject(ChatAppService);
-
   auth = inject(Auth);
 
   user!: AppUser | null;
@@ -41,22 +40,28 @@ export class ChatAppComponent implements OnInit {
 
         const storedUser = localStorage.getItem('selectedUser');
         if (storedUser) {
-          this.selectedUser = JSON.parse(storedUser);
+          const parsedUser = JSON.parse(storedUser);
+          if (parsedUser?.uid !== this.user?.uid) {
+            this.selectedUser = parsedUser;
+          } else {
+            this.selectedUser = this.allUsers[0];
+          }
+        } else {
+          this.selectedUser = this.allUsers[0];
         }
       }
     });
   }
 
   openChat(user: AppUser): void {
-    this.selectedUser = user;
-    localStorage.setItem('selectedUser', JSON.stringify(this.selectedUser));
+    if (user.uid !== this.user?.uid) {
+      this.selectedUser = user;
+      localStorage.setItem('selectedUser', JSON.stringify(this.selectedUser));
+    }
   }
 
   get usernameOfCurrentlyOpenChat(): string {
-    const selectedUser = JSON.parse(
-      localStorage.getItem('selectedUser') || '{}'
-    );
-    return selectedUser.username || '';
+    return this.selectedUser?.username || '';
   }
 
   get selectedUserMessages(): Message[] {

@@ -25,7 +25,6 @@
   border: 2px solid #007bff;
 }
 
-/* Chat App Container */
 .chat-app-container {
   display: flex;
   background-color: #fff;
@@ -84,7 +83,6 @@
   color: #333;
 }
 
-/* Chat Body */
 .chat {
   width: 75%;
   padding: 20px;
@@ -187,7 +185,6 @@
   background-color: #0056b3;
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
   .chat-app-container {
     flex-direction: column;
