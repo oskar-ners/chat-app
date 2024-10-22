@@ -75,6 +75,7 @@ export class ChatAppComponent implements OnInit {
       const chatId = `chat_with_${this.selectedUser.username}-${this.selectedUser.uid}`;
 
       await this.chatAppService.updateChatMessages(chatId, message);
+      this.user = await this.chatAppService.getUserData(this.user?.uid);
       this.newMessage = '';
     }
   }

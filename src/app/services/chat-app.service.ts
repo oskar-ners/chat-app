@@ -41,31 +41,6 @@ export class ChatAppService {
     }
   }
 
-  async updateUserChats(): Promise<void> {
-    const allUsersDocs = await getDocs(collection(this.firestore, 'users'));
-    const allUsersData = allUsersDocs.docs.map((doc) => doc.data() as AppUser);
-
-    const chats: { [key: string]: Chat[] } = {};
-
-    for (const user of allUsersData) {
-      chats[user.uid] = [];
-
-      for (const otherUser of allUsersData) {
-        if (user.uid !== otherUser.uid) {
-          chats[user.uid].push({
-            id: `chat_with_${otherUser.username}-${otherUser.uid}`,
-            messages: [] as Message[],
-          });
-        }
-      }
-    }
-
-    for (const user of allUsersData) {
-      const userDocRef = doc(this.firestore, `users/${user.uid}`);
-      await updateDoc(userDocRef, { chats: chats[user.uid] });
-    }
-  }
-
   async updateChatMessages(chatId: string, newMessage: Message): Promise<void> {
     const currentUserUid = this.auth.currentUser?.uid;
     if (!currentUserUid) return;
