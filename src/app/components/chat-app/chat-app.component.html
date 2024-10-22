@@ -29,8 +29,11 @@
 
 <ng-template #chatWithUser
              let-user="user">
-    <div class="chat-header">
+    <div style="display: flex;"
+         class="chat-header">
         <h2>Chat with {{usernameOfCurrentlyOpenChat}}</h2>
+        <img style="width: 60px; height:70px; margin-left: 10px;"
+             [src]="selectedUser.photoURL">
     </div>
     <div class="chat-body">
         <div class="chat-messages">
